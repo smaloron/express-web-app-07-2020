@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const messageDAO = require('../models/message-model');
+const cookieParser = require('cookie-parser');
+router.use(cookieParser());
 
-const uploadPhoto = require('../middlewares/upload').singlePhoto;
+const csrfProtection = require('csurf')({ cookie: true });
 
 router.use((req, res, next) => {
   if (req.session.user) {
@@ -11,14 +13,15 @@ router.use((req, res, next) => {
   }
 });
 
-router.get('/message/new', (req, res) => {
+router.get('/message/new', [csrfProtection], (req, res) => {
   res.render('messages/form', {
     formTitle: 'Nouveau message',
+    csrfToken: req.csrfToken(),
   });
 });
 
-router.post('/message/new', [uploadPhoto], async (req, res) => {
-  console.log('from message new ' + JSON.stringify(req.body));
+router.post('/message/new', csrfProtection, async (req, res) => {
+  //console.log('from message new ' + JSON.stringify(req.body));
   // Validation de la saisie
   let ok = true;
   errors = [];
@@ -35,6 +38,8 @@ router.post('/message/new', [uploadPhoto], async (req, res) => {
     errors.push(req.fileTypeError);
     ok = false;
   }
+
+  console.log(ok);
 
   if (ok) {
     // Création d'un objet message

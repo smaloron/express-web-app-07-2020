@@ -16,7 +16,8 @@ block content
 
         each answer in answers
             div.ml-5
-                p le #{answer.date_fr} par #{answer.author}
+                p le #[span #{answer.date_fr}] par 
+                    a(href="/messages-by-" + answer.author) #{answer.author}
                 
                 .ml-4.row
                     if answer.picture

@@ -1,0 +1,10 @@
+extend layout
+
+block content
+    h1.mt-2 Liste des auteurs
+
+    ul
+        each author in userList
+            li 
+                a(href="/messages-by-" + author.user_name)= author.user_name 
+                span (#{author.message_count})

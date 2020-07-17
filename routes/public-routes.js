@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const messageDAO = require('../models/message-model');
+const userDAO = require('../models/user-model');
 
 const uploadPhoto = require('../middlewares/upload').singlePhoto;
 
@@ -67,6 +68,21 @@ router.post('/message/:id([0-9]+)', [uploadPhoto], async (req, res) => {
       input: req.body,
     });
   }
+});
+
+router.get('/users-messages', async (req, res) => {
+  const userList = await userDAO.findAllWithMessageCount();
+  res.render('user-messages', {
+    userList,
+  });
+});
+
+router.get('/messages-by-:name', async (req, res) => {
+  const data = await messageDAO.findAllByAuthor(req.params.name);
+  res.render('messages/by-author', {
+    messageList: data,
+    author: req.params.name,
+  });
 });
 
 module.exports = router;

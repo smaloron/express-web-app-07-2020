@@ -10,6 +10,8 @@ const fileStorage = require('session-file-store')(session);
 
 const flash = require('express-flash-messages');
 
+const uploadPhoto = require('./middlewares/upload').singlePhoto;
+
 // Rend disponible le contenu du dossier
 // public à la racine du site
 app.use(express.static('public'));
@@ -21,10 +23,7 @@ app.use('/photos', express.static('./uploads'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  console.log('after bodyParser ' + JSON.stringify(req.body));
-  next();
-});
+app.use(uploadPhoto);
 
 // Middleware pour la gestion des sessions
 app.use(
@@ -59,6 +58,14 @@ app.use((req, res, next) => {
 app.use(require('./routes/public-routes'));
 app.use(require('./routes/authentication-routes'));
 app.use(require('./routes/secured-routes'));
+
+app.use(function (err, req, res, next) {
+  console.log(err);
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
+  res.status(403).json({
+    message: 'Passez par le formulaire',
+  });
+});
 
 app.use((err, req, res, next) => {
   res.status(500);

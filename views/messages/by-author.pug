@@ -1,0 +1,10 @@
+extend ../layout 
+
+block content
+    h1.mt-2 Messages de #{author}
+
+    ul
+        each m in messageList
+            - let id = m.parent_id || m.id
+            li
+                a(href="/message/" + id)= m.title
