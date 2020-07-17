@@ -1,0 +1,35 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        block title
+            title= pageTitle
+        block js
+            script(src="/jquery/jquery.min.js")
+            script(src="/bootstrap/js/bootstrap.min.js")
+        block css
+            link(rel="stylesheet" href="/bootstrap/css/bootstrap.min.css")
+    body.container-fluid
+        block header
+            include fragments/nav.pug
+        .row.justify-content-center
+            .col-md-8
+
+                // Gestion des messages flash
+
+                //- Récupération des messages éventuels
+                - const messages = getMessages()
+
+                // Affichage des messages
+                if messages
+                    if messages.infos
+                        .alert.alert-info
+                            each message in messages.infos
+                                p= message
+                    if messages.errors
+                        .alert.alert-danger
+                            each message in messages.errors
+                                p= message
+
+                block content
+

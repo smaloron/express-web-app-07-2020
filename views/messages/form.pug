@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+    h1 Nouveau message
+
+    if errorList
+        .alert.alert-danger
+            ul
+                each error in errorList
+                    li= error
+
+    - const data = !input? {title: '',content: ''}: input
+        
+
+    form(method="post" enctype="multipart/form-data")
+        .form-group
+            label Titre
+            input.form-control(type="text" name="title" value=data.title)
+        .form-group
+            label Texte
+            textarea.form-control(name="content", cols="30", rows="10")= data.content
+        .input-group
+            label.custom-file-label Image
+            input.custom-file-input(type="file" name="photo" id="photoUpload")
+
+        button.btn.btn-primary.btn-block.mt-3(type="submit") Valider
+
+block append js
+    script.
+        $(document).ready(function(){
+            $("#photoUpload").change(function(){
+                const fileName = $(this).val();
+                const parts = fileName.split('\\');
+                $(this).prev('.custom-file-label').html(parts[parts.length-1]);
+            })
+        });

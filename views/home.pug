@@ -1,0 +1,16 @@
+extend layout
+
+block content
+    h1 Liste des messages
+
+    table.table.table-striped
+        tr
+            th Titre
+            th Auteur
+            th publié le
+        each message in messageList
+            tr
+                td 
+                    a(href="/message/" + message.id)= message.title
+                td= message.author
+                td= message.date_fr

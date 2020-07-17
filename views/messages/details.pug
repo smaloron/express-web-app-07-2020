@@ -1,0 +1,7 @@
+extend ../layout
+
+block content
+    p le #[span(class="text-danger") #{message.date_fr}] par #[strong #{message.author}]
+    h1= message.title
+    img(src="/photos/"+ message.picture class="img-fluid")
+    div= message.content

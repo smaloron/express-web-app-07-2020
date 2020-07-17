@@ -1,0 +1,20 @@
+extend layout
+
+block content
+    h1.mt-2 Inscription
+
+    if message
+        .alert.alert-info= message
+
+
+    form(method="post")
+        .form-group
+            label Nom
+            input.form-control(type="text" name="name")
+        .form-group
+            label email
+            input.form-control(type="email" name="email")
+        .form-group
+            label Mot de passe
+            input.form-control(type="password" name="pass")
+        button.btn.btn-primary.btn-block(type="submit") Valider    
