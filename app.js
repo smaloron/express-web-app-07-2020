@@ -21,6 +21,11 @@ app.use('/photos', express.static('./uploads'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log('after bodyParser ' + JSON.stringify(req.body));
+  next();
+});
+
 // Middleware pour la gestion des sessions
 app.use(
   session({
@@ -45,7 +50,6 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log(req.logout);
   if (req.query.logout) {
     req.flash('infos', 'Vous êtes déconnecté');
   }
@@ -55,6 +59,14 @@ app.use((req, res, next) => {
 app.use(require('./routes/public-routes'));
 app.use(require('./routes/authentication-routes'));
 app.use(require('./routes/secured-routes'));
+
+app.use((err, req, res, next) => {
+  res.status(500);
+  res.render('error', {
+    pageTitle: 'Erreur',
+    errorMessage: err.message || err,
+  });
+});
 
 app.listen(3000, () => {
   console.log('Express server started');

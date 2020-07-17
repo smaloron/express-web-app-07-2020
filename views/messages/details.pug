@@ -3,5 +3,36 @@ extend ../layout
 block content
     p le #[span(class="text-danger") #{message.date_fr}] par #[strong #{message.author}]
     h1= message.title
-    img(src="/photos/"+ message.picture class="img-fluid")
+    if message.picture
+        img(src="/photos/"+ message.picture class="img-fluid")
     div= message.content
+
+    if islogged
+        include ../fragments/message-form.pug
+
+    if answers.length > 0
+        hr.mt-2
+        h2.mt-2 Les réponses
+
+        each answer in answers
+            div.ml-5
+                p le #{answer.date_fr} par #{answer.author}
+                
+                .ml-4.row
+                    if answer.picture
+                        .col-2
+                            img(src="/photos/"+ answer.picture class="img-fluid img-thumbnail")
+                    .col= answer.content
+            hr.mb-3
+
+block append js
+    script.
+        $(document).ready(function(){
+            $("#title-input").hide();
+
+            $("#photoUpload").change(function(){
+                const fileName = $(this).val();
+                const parts = fileName.split('\\');
+                $(this).prev('.custom-file-label').html(parts[parts.length-1]);
+            })
+        });

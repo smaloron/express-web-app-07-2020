@@ -12,10 +12,13 @@ router.use((req, res, next) => {
 });
 
 router.get('/message/new', (req, res) => {
-  res.render('messages/form');
+  res.render('messages/form', {
+    formTitle: 'Nouveau message',
+  });
 });
 
 router.post('/message/new', [uploadPhoto], async (req, res) => {
+  console.log('from message new ' + JSON.stringify(req.body));
   // Validation de la saisie
   let ok = true;
   errors = [];
@@ -26,6 +29,11 @@ router.post('/message/new', [uploadPhoto], async (req, res) => {
   if (req.body.content.length <= 15) {
     ok = false;
     errors.push('Le texte doit faire plus de 15 caractères');
+  }
+
+  if (req.fileTypeError) {
+    errors.push(req.fileTypeError);
+    ok = false;
   }
 
   if (ok) {
@@ -47,6 +55,7 @@ router.post('/message/new', [uploadPhoto], async (req, res) => {
     res.render('messages/form', {
       errorList: errors,
       input: req.body,
+      formTitle: 'Nouveau message',
     });
   }
 });

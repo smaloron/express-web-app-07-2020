@@ -1,0 +1,21 @@
+h2= formTitle
+
+if errorList
+    .alert.alert-danger
+        ul
+            each error in errorList
+                li= error
+
+- const data = !input? {title: '',content: ''}: input
+    
+form(method="post" enctype="multipart/form-data")
+    #title-input.form-group
+        label Titre
+        input.form-control(type="text" name="title" value=data.title)
+    .form-group
+        label Texte
+        textarea.form-control(name="content", cols="30", rows="10")= data.content
+    .input-group
+        label.custom-file-label Image
+        input.custom-file-input(type="file" name="photo" id="photoUpload")
+    button.btn.btn-primary.btn-block.mt-3(type="submit") Valider

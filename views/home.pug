@@ -8,9 +8,12 @@ block content
             th Titre
             th Auteur
             th publié le
+            th nb de réponses
         each message in messageList
             tr
                 td 
                     a(href="/message/" + message.id)= message.title
+                    span &nbsp;(#{message.answer_count})
                 td= message.author
                 td= message.date_fr
+                td= message.answer_count

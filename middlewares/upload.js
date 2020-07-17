@@ -26,7 +26,27 @@ const imageUploadStorage = multer.diskStorage({
   },
 });
 
-const imageUpload = multer({ storage: imageUploadStorage });
+const fileTypeFilter = (req, file, callback) => {
+  // Liste des types de fichier autorisés
+  const allowedFileTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+  ];
+
+  if (allowedFileTypes.indexOf(file.mimetype) == -1) {
+    req.fileTypeError = 'Seulement des images GIF, JPEG ou PNG';
+    return callback(null, false);
+  }
+
+  callback(null, true);
+};
+
+const imageUpload = multer({
+  storage: imageUploadStorage,
+  fileFilter: fileTypeFilter,
+});
 
 module.exports = {
   singlePhoto: imageUpload.single('photo'),
